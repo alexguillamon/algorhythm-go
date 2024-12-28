@@ -1,0 +1,53 @@
+package phonetics
+
+var ipaAccents = accentChars{
+	Primary:   "ˈ",
+	Secondary: "ˌ",
+	None:      "",
+}
+
+var ipaPhonemeToFamily = map[string]string{
+	"ɑ":  "vowel",
+	"æ":  "vowel",
+	"ʌ":  "vowel",
+	"ə":  "vowel",
+	"ɔ":  "vowel",
+	"aʊ": "vowel",
+	"aɪ": "vowel",
+	"b":  "stop",
+	"tʃ": "affricate",
+	"d":  "stop",
+	"ð":  "fricative",
+	"ɛ":  "vowel",
+	"ɝ":  "vowel",
+	"ɚ":  "vowel",
+	"eɪ": "vowel",
+	"f":  "fricative",
+	"g":  "stop",
+	"h":  "aspirate",
+	"ɪ":  "vowel",
+	"i":  "vowel",
+	"dʒ": "affricate",
+	"k":  "stop",
+	"l":  "liquid",
+	"m":  "nasal",
+	"n":  "nasal",
+	"ŋ":  "nasal",
+	"oʊ": "vowel",
+	"ɔɪ": "vowel",
+	"p":  "stop",
+	"ɹ":  "liquid",
+	"s":  "fricative",
+	"ʃ":  "fricative",
+	"t":  "stop",
+	"θ":  "fricative",
+	"ʊ":  "vowel",
+	"u":  "vowel",
+	"v":  "fricative",
+	"w":  "semivowel",
+	"j":  "semivowel",
+	"z":  "fricative",
+	"ʒ":  "fricative",
+}
+
+var IPA = buildAlphabet(ipaPhonemeToFamily, ipaAccents)
