@@ -6,7 +6,7 @@ var arpabetAccents = accentChars{
 	None:      "0",
 }
 
-var phonemeToFamily = map[string]string{
+var arpabetPhonemeToFamily = map[string]string{
 	"AA": "vowel",
 	"AE": "vowel",
 	"AH": "vowel",
@@ -48,4 +48,4 @@ var phonemeToFamily = map[string]string{
 	"ZH": "fricative",
 }
 
-var Arpabet = buildAlphabet(phonemeToFamily, arpabetAccents)
+var Arpabet = buildAlphabet(arpabetPhonemeToFamily, arpabetAccents)
