@@ -7,41 +7,45 @@ import (
 )
 
 type trie struct {
-	root *trieNode
+	root *TrieNode
 }
 
-type trieNode struct {
-	children       map[string]*trieNode
-	isEndOfWord    bool
-	wordReferences mapset.Set[string]
+type TrieNode struct {
+	Children       map[string]*TrieNode
+	IsEndOfWord    bool
+	WordReferences mapset.Set[string]
+}
+
+func (t *trie) GetRoot() *TrieNode {
+	return t.root
 }
 
 func (t *trie) Search(sequence []string) mapset.Set[string] {
 	node := t.root
 	for _, phoneme := range sequence {
-		_, ok := node.children[phoneme]
+		_, ok := node.Children[phoneme]
 		if !ok {
 			return mapset.NewSet[string]()
 		}
-		node = node.children[phoneme]
+		node = node.Children[phoneme]
 	}
-	return node.wordReferences
+	return node.WordReferences
 }
 
 func (t *trie) insert(sequence []string, wordReference string) {
 	node := t.root
 	for _, phoneme := range sequence {
-		_, ok := node.children[phoneme]
+		_, ok := node.Children[phoneme]
 		if !ok {
-			node.children[phoneme] = &trieNode{
-				children:       make(map[string]*trieNode),
-				wordReferences: mapset.NewSet[string](),
+			node.Children[phoneme] = &TrieNode{
+				Children:       make(map[string]*TrieNode),
+				WordReferences: mapset.NewSet[string](),
 			}
 		}
-		node = node.children[phoneme]
+		node = node.Children[phoneme]
 	}
-	node.isEndOfWord = true
-	node.wordReferences.Add(wordReference)
+	node.IsEndOfWord = true
+	node.WordReferences.Add(wordReference)
 }
 
 func buildTrie(
@@ -51,9 +55,9 @@ func buildTrie(
 ) *trie {
 	if t == nil {
 		t = &trie{
-			root: &trieNode{
-				children:       make(map[string]*trieNode),
-				wordReferences: mapset.NewSet[string](),
+			root: &TrieNode{
+				Children:       make(map[string]*TrieNode),
+				WordReferences: mapset.NewSet[string](),
 			},
 		}
 

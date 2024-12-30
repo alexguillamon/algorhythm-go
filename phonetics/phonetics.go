@@ -97,20 +97,20 @@ func (pa *Alphabet) CleanPhoneme(phoneme string) string {
 	return strings.TrimPrefix(noDigits, "-")
 }
 
-func (pa *Alphabet) IsVowel(phoneme string) (bool, error) {
+func (pa *Alphabet) IsVowel(phoneme string) bool {
 	family, err := pa.GetPhonemeFamily(phoneme)
 	if err != nil {
-		return false, err
+		return false
 	}
-	return family == "vowel", nil
+	return family == "vowel"
 }
 
-func (pa *Alphabet) IsConsonant(phoneme string) (bool, error) {
+func (pa *Alphabet) IsConsonant(phoneme string) bool {
 	family, err := pa.GetPhonemeFamily(phoneme)
 	if err != nil {
-		return false, err
+		return false
 	}
-	return family != "vowel", nil
+	return family != "vowel"
 }
 
 func (pa *Alphabet) MatchPhonemeStress(origin, target string) string {
@@ -133,9 +133,19 @@ func (pa *Alphabet) FindStress(sequence []string) int {
 	for i := len(sequence) - 1; i >= 0; i-- {
 		phoneme := sequence[i]
 		if strings.Contains(phoneme, pa.GetPrimaryStressChar()) {
-			return len(sequence) - i - 1
+			return i
 		}
 
 	}
 	return stress_idx
+}
+func (pa *Alphabet) FindStressSquence(sequence []string) []string {
+	for i := len(sequence) - 1; i >= 0; i-- {
+		phoneme := sequence[i]
+		if strings.Contains(phoneme, pa.GetPrimaryStressChar()) {
+			return sequence[i:]
+		}
+
+	}
+	return []string{}
 }

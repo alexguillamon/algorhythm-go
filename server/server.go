@@ -2,11 +2,13 @@ package server
 
 import (
 	"algorhytm/language"
+	"algorhytm/rhymes"
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/gorilla/schema"
 	"net/http"
+
+	"github.com/gorilla/schema"
 )
 
 // TODO: make the handleDictionary rhyme take params for the get
@@ -49,28 +51,25 @@ type RhymesQuery struct {
 
 func handleDictionaryRhymes(lang *language.Language) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// logger.Info(r.Context(), "msg", "handleDictionaryRhymes")
-
 		var query RhymesQuery
 		if err := decodeQueryParams(r, &query); err != nil {
 			_ = encode(w, r, http.StatusBadRequest, err)
 			return
 		}
 
-		// TODO: add validation to the type of keys and also the key combination
-		// basically in case of not a match just hit them with the first one
-		// maybe we might want to go away from the idea of getting the POS but just sending both for any given word
-		// TODO: make an enum of the possible POSs
-		// TODO: go back to filtering function and make sure we don't lose words that should have accents like love
-		// TODO: add error handling for when an word is not in the dictionary
-		// REMEMBER because we are scraping POS we can get rid of pronunciations of words that don't have primary accents
-		// also we delete all pronunciations that don't have a primary accent from the beginning before we create any of the dictionaryies
-		// that way we are only working with stressed versions of the words and the filtering logic for wikittionary will not filter those out.
-		// that should be the plan here we have 25k words and some of those should have stress, if we just get rid of the entries that don't have a stress we get rid of this problem
-
-		pronunciation := (*lang.PhonemeDictionary)[query.Word][0]
-		result := lang.Trie.Search(pronunciation[lang.PhoneticAlphabet.FindStress(pronunciation):])
-		err := encode(w, r, http.StatusOK, result)
+		pronunciation, ok := (*lang.PhonemeDictionary)[query.Word]
+		if !ok {
+			_ = encode(w, r, int(http.StatusNotFound), "word not in the dictionary")
+			return
+		}
+		sequence := lang.PhoneticAlphabet.FindStressSquence(pronunciation[0])
+		// family, err := rhymes.FindFamily(lang, sequence)
+		substractive, err := rhymes.FindAssonance(lang, sequence)
+		if err != nil {
+			_ = encode(w, r, http.StatusInternalServerError, err)
+		}
+		// result := lang.Trie.Search(sequence)
+		err = encode(w, r, http.StatusOK, substractive)
 		if err != nil {
 			_ = encode(w, r, http.StatusInternalServerError, err)
 		}
