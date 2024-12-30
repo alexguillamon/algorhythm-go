@@ -11,10 +11,6 @@ import (
 	"github.com/gorilla/schema"
 )
 
-// TODO: make the handleDictionary rhyme take params for the get
-// TODO: use the params to find the word in the dictionary and then feed that to they search
-
-// TODO: plan and port the Rhyming service and searches
 var decoder = schema.NewDecoder()
 
 type Config struct {

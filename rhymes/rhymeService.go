@@ -6,6 +6,18 @@ import (
 	mapset "github.com/deckarep/golang-set/v2"
 )
 
+// TODO: find a way to order results (is there a way to have an ordered set?, also if not we could probably live with just deconstructing the rhymes in order and and allow the inside of each to not have order)
+// TODO: fix error handling
+// - add panic to functions that should never error out but are possible to error out (most things in the alphabet, the program should never pass things that don't exist or work for these)
+// - fix the error handling of not finding words
+// TODO: figure out how should response objects be created and where would they go
+// TODO: write unit test for rhyme algorithms and for rhyming service
+// TODO: write unit test for trie and trie creation
+// TODO: write unit test for language?
+// TODO: add hot reload
+// TODO: create make file for project
+// TODO: revisit the structure of the project and also look to make the rhyming function private
+
 type RhymeService struct {
 	language          *language.Language
 	rhymesIdentity    mapset.Set[string]
