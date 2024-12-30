@@ -13,7 +13,7 @@ type StateKey struct {
 	Sequence string  // Hash of the current sequence
 }
 
-func FindSubstractive(lang *language.Language, phonemeSequence []string) (*mapset.Set[string], error) {
+func FindSubstractive(lang *language.Language, phonemeSequence []string) mapset.Set[string] {
 	cache := mapset.NewSet[StateKey]()
 	stack := []chain{{lang.Trie.GetRoot(), phonemeSequence}}
 
@@ -60,14 +60,14 @@ func FindSubstractive(lang *language.Language, phonemeSequence []string) (*mapse
 
 			family, err := lang.PhoneticAlphabet.GetPhonemeFamily(nextSequence[0])
 			if err != nil {
-				return nil, err
+				return nil
 			}
 			if family == "vowel" {
 				stack = append(stack, chain{childNode, nextSequence})
 			} else {
 				phonemes, err := lang.PhoneticAlphabet.GetFamilyPhonemes(family)
 				if err != nil {
-					return nil, err
+					return nil
 				}
 
 				for _, phoneme := range phonemes {
@@ -82,5 +82,5 @@ func FindSubstractive(lang *language.Language, phonemeSequence []string) (*mapse
 		}
 
 	}
-	return &words, nil
+	return words
 }

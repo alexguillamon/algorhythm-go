@@ -56,20 +56,9 @@ func handleDictionaryRhymes(lang *language.Language) http.Handler {
 			_ = encode(w, r, http.StatusBadRequest, err)
 			return
 		}
+		rhymeService := rhymes.NewRhymeService(lang)
 
-		pronunciation, ok := (*lang.PhonemeDictionary)[query.Word]
-		if !ok {
-			_ = encode(w, r, int(http.StatusNotFound), "word not in the dictionary")
-			return
-		}
-		sequence := lang.PhoneticAlphabet.FindStressSquence(pronunciation[0])
-		// family, err := rhymes.FindFamily(lang, sequence)
-		substractive, err := rhymes.FindAssonance(lang, sequence)
-		if err != nil {
-			_ = encode(w, r, http.StatusInternalServerError, err)
-		}
-		// result := lang.Trie.Search(sequence)
-		err = encode(w, r, http.StatusOK, substractive)
+		err := encode(w, r, http.StatusOK, rhymeService.RhymesFind(query.Word))
 		if err != nil {
 			_ = encode(w, r, http.StatusInternalServerError, err)
 		}

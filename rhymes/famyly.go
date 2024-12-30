@@ -11,7 +11,7 @@ type chain struct {
 	Sequence []string
 }
 
-func FindFamily(lang *language.Language, phonemeSequence []string) (*mapset.Set[string], error) {
+func FindFamily(lang *language.Language, phonemeSequence []string) mapset.Set[string] {
 	stack := []chain{{lang.Trie.GetRoot(), phonemeSequence}}
 
 	words := mapset.NewSet[string]()
@@ -45,14 +45,14 @@ func FindFamily(lang *language.Language, phonemeSequence []string) (*mapset.Set[
 
 			family, err := lang.PhoneticAlphabet.GetPhonemeFamily(nextSequence[0])
 			if err != nil {
-				return nil, err
+				return nil
 			}
 			if family == "vowel" {
 				stack = append(stack, chain{childNode, nextSequence})
 			} else {
 				phonemes, err := lang.PhoneticAlphabet.GetFamilyPhonemes(family)
 				if err != nil {
-					return nil, err
+					return nil
 				}
 
 				for _, phoneme := range phonemes {
@@ -64,5 +64,5 @@ func FindFamily(lang *language.Language, phonemeSequence []string) (*mapset.Set[
 		}
 	}
 
-	return &words, nil
+	return words
 }

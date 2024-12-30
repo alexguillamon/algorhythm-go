@@ -8,7 +8,7 @@ import (
 	mapset "github.com/deckarep/golang-set/v2"
 )
 
-func FindAssonance(lang *language.Language, phonemeSequence []string) (*mapset.Set[string], error) {
+func FindAssonance(lang *language.Language, phonemeSequence []string) mapset.Set[string] {
 	cache := mapset.NewSet[StateKey]()
 
 	stack := []taggedChain{{lang.Trie.GetRoot(), phonemeSequence, 0}}
@@ -98,7 +98,7 @@ func FindAssonance(lang *language.Language, phonemeSequence []string) (*mapset.S
 		}
 	}
 
-	return &words, nil
+	return words
 }
 
 func expandVowelPhoneme(

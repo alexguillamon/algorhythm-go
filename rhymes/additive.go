@@ -22,7 +22,7 @@ func tagPhonemeSequence(phonemeSequence []string) []string {
 	return taggedSequence
 }
 
-func FindAdditive(lang *language.Language, phonemeSequence []string) (*mapset.Set[string], error) {
+func FindAdditive(lang *language.Language, phonemeSequence []string) mapset.Set[string] {
 	cache := mapset.NewSet[StateKey]()
 
 	stack := []taggedChain{{lang.Trie.GetRoot(), tagPhonemeSequence(phonemeSequence), 0}}
@@ -75,7 +75,7 @@ func FindAdditive(lang *language.Language, phonemeSequence []string) (*mapset.Se
 
 			family, err := lang.PhoneticAlphabet.GetPhonemeFamily(nextPhoneme)
 			if err != nil {
-				return nil, err
+				return nil
 			}
 			if family == "vowel" {
 				stack = append(stack, taggedChain{childNode, nextSequence, 0})
@@ -87,7 +87,7 @@ func FindAdditive(lang *language.Language, phonemeSequence []string) (*mapset.Se
 				if strings.Contains(nextPhoneme, "-") {
 					familyPhonemes, err := lang.PhoneticAlphabet.GetFamilyPhonemes(family)
 					if err != nil {
-						return nil, err
+						return nil
 					}
 
 					for _, familyPhoneme := range familyPhonemes {
@@ -182,5 +182,5 @@ func FindAdditive(lang *language.Language, phonemeSequence []string) (*mapset.Se
 		}
 	}
 
-	return &words, nil
+	return words
 }
