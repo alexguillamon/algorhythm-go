@@ -28,6 +28,7 @@ type RhymeService struct {
 	rhymesAssonance   mapset.Set[string]
 	resultsClose      mapset.Set[string]
 	resultsMedium     mapset.Set[string]
+	resultsFar        mapset.Set[string]
 }
 
 // NewRhymeService initializes a new RhymeService
@@ -42,6 +43,7 @@ func NewRhymeService(language *language.Language) *RhymeService {
 		rhymesAssonance:   mapset.NewSet[string](),
 		resultsClose:      mapset.NewSet[string](),
 		resultsMedium:     mapset.NewSet[string](),
+		resultsFar:        mapset.NewSet[string](),
 	}
 }
 
@@ -62,14 +64,18 @@ func (rs *RhymeService) rhymesFindAll(word string) {
 	rs.rhymesSubtractive = FindSubstractive(rs.language, phoneticSequence)
 	rs.rhymesAssonance = FindAssonance(rs.language, phoneticSequence)
 
-	rs.resultsClose = mapset.NewSet[string]()
-	rs.resultsClose = rs.resultsClose.Union(rs.rhymesPerfect).
+	rs.resultsClose = rs.rhymesPerfect.
 		Union(rs.rhymesFamily).
-		Union(rs.rhymesSubtractive).
-		Union(rs.rhymesAdditive).
 		Difference(rs.rhymesIdentity)
 
-	rs.resultsMedium = rs.rhymesAssonance.Difference(rs.resultsClose).Difference(rs.rhymesIdentity)
+	rs.resultsMedium = rs.rhymesAdditive.
+		Union(rs.rhymesSubtractive).
+		Difference(rs.resultsClose).
+		Difference(rs.rhymesIdentity)
+	rs.resultsFar = rs.rhymesAssonance.
+		Difference(rs.resultsClose).
+		Difference(rs.resultsMedium).
+		Difference(rs.rhymesIdentity)
 }
 
 func (rs *RhymeService) RhymesFind(word string) map[string][]string {
@@ -78,5 +84,6 @@ func (rs *RhymeService) RhymesFind(word string) map[string][]string {
 	return map[string][]string{
 		"close":  rs.resultsClose.ToSlice(),
 		"medium": rs.resultsMedium.ToSlice(),
+		"far":    rs.resultsFar.ToSlice(),
 	}
 }

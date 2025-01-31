@@ -9,6 +9,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/schema"
+	"github.com/rs/cors"
 )
 
 var decoder = schema.NewDecoder()
@@ -26,7 +27,7 @@ func NewServer(
 
 	addRoutes(mux, English)
 
-	var handler http.Handler = mux
+	handler := cors.Default().Handler(mux)
 
 	return handler
 }
@@ -38,7 +39,6 @@ func addRoutes(
 ) {
 	mux.Handle("/{lang}/dictionary/rhymes", handleDictionaryRhymes(English))
 	mux.Handle("/", http.NotFoundHandler())
-
 }
 
 type RhymesQuery struct {
