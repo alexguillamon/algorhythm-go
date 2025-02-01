@@ -2,8 +2,7 @@ package rhymes
 
 import (
 	"algorhytm/language"
-
-	mapset "github.com/deckarep/golang-set/v2"
+	"algorhytm/orderedset"
 )
 
 type chain struct {
@@ -11,10 +10,10 @@ type chain struct {
 	Sequence []string
 }
 
-func FindFamily(lang *language.Language, phonemeSequence []string) mapset.Set[string] {
+func FindFamily(lang *language.Language, phonemeSequence []string) orderedset.Set[string] {
 	stack := []chain{{lang.Trie.GetRoot(), phonemeSequence}}
 
-	words := mapset.NewSet[string]()
+	words := orderedset.NewSet[string]()
 
 	for len(stack) > 0 {
 		// Pop the stack.
@@ -27,7 +26,7 @@ func FindFamily(lang *language.Language, phonemeSequence []string) mapset.Set[st
 		// If the sequence is empty, add word references to the result.
 		if len(currentSequence) == 0 {
 			if currentNode.IsEndOfWord {
-				words.Append(currentNode.WordReferences.ToSlice()...)
+				words.Add(currentNode.WordReferences.ToSlice()...)
 			}
 			continue
 		}
@@ -45,14 +44,14 @@ func FindFamily(lang *language.Language, phonemeSequence []string) mapset.Set[st
 
 			family, err := lang.PhoneticAlphabet.GetPhonemeFamily(nextSequence[0])
 			if err != nil {
-				return nil
+				return words
 			}
 			if family == "vowel" {
 				stack = append(stack, chain{childNode, nextSequence})
 			} else {
 				phonemes, err := lang.PhoneticAlphabet.GetFamilyPhonemes(family)
 				if err != nil {
-					return nil
+					return words
 				}
 
 				for _, phoneme := range phonemes {

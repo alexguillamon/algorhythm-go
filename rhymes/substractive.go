@@ -2,10 +2,9 @@ package rhymes
 
 import (
 	"algorhytm/language"
+	"algorhytm/orderedset"
 	"strings"
 	"unsafe"
-
-	mapset "github.com/deckarep/golang-set/v2"
 )
 
 type StateKey struct {
@@ -13,11 +12,11 @@ type StateKey struct {
 	Sequence string  // Hash of the current sequence
 }
 
-func FindSubstractive(lang *language.Language, phonemeSequence []string) mapset.Set[string] {
-	cache := mapset.NewSet[StateKey]()
+func FindSubstractive(lang *language.Language, phonemeSequence []string) orderedset.Set[string] {
+	cache := orderedset.NewSet[StateKey]()
 	stack := []chain{{lang.Trie.GetRoot(), phonemeSequence}}
 
-	words := mapset.NewSet[string]()
+	words := orderedset.NewSet[string]()
 
 	for len(stack) > 0 {
 		current := stack[len(stack)-1]
@@ -43,7 +42,7 @@ func FindSubstractive(lang *language.Language, phonemeSequence []string) mapset.
 		// If the sequence is empty, add word references to the result.
 		if len(currentSequence) == 0 {
 			if currentNode.IsEndOfWord {
-				words.Append(currentNode.WordReferences.ToSlice()...)
+				words.Add(currentNode.WordReferences.ToSlice()...)
 			}
 			continue
 		}
@@ -60,14 +59,14 @@ func FindSubstractive(lang *language.Language, phonemeSequence []string) mapset.
 
 			family, err := lang.PhoneticAlphabet.GetPhonemeFamily(nextSequence[0])
 			if err != nil {
-				return nil
+				return words
 			}
 			if family == "vowel" {
 				stack = append(stack, chain{childNode, nextSequence})
 			} else {
 				phonemes, err := lang.PhoneticAlphabet.GetFamilyPhonemes(family)
 				if err != nil {
-					return nil
+					return words
 				}
 
 				for _, phoneme := range phonemes {

@@ -2,11 +2,9 @@ package rhymes
 
 import (
 	"algorhytm/language"
-
-	mapset "github.com/deckarep/golang-set/v2"
+	"algorhytm/orderedset"
 )
 
-// TODO: find a way to order results (is there a way to have an ordered set?, also if not we could probably live with just deconstructing the rhymes in order and and allow the inside of each to not have order)
 // TODO: fix error handling
 // - add panic to functions that should never error out but are possible to error out (most things in the alphabet, the program should never pass things that don't exist or work for these)
 // - fix the error handling of not finding words
@@ -20,30 +18,30 @@ import (
 
 type RhymeService struct {
 	language          *language.Language
-	rhymesIdentity    mapset.Set[string]
-	rhymesPerfect     mapset.Set[string]
-	rhymesFamily      mapset.Set[string]
-	rhymesAdditive    mapset.Set[string]
-	rhymesSubtractive mapset.Set[string]
-	rhymesAssonance   mapset.Set[string]
-	resultsClose      mapset.Set[string]
-	resultsMedium     mapset.Set[string]
-	resultsFar        mapset.Set[string]
+	rhymesIdentity    orderedset.Set[string]
+	rhymesPerfect     orderedset.Set[string]
+	rhymesFamily      orderedset.Set[string]
+	rhymesAdditive    orderedset.Set[string]
+	rhymesSubtractive orderedset.Set[string]
+	rhymesAssonance   orderedset.Set[string]
+	resultsClose      orderedset.Set[string]
+	resultsMedium     orderedset.Set[string]
+	resultsFar        orderedset.Set[string]
 }
 
 // NewRhymeService initializes a new RhymeService
 func NewRhymeService(language *language.Language) *RhymeService {
 	return &RhymeService{
 		language:          language,
-		rhymesIdentity:    mapset.NewSet[string](),
-		rhymesPerfect:     mapset.NewSet[string](),
-		rhymesFamily:      mapset.NewSet[string](),
-		rhymesAdditive:    mapset.NewSet[string](),
-		rhymesSubtractive: mapset.NewSet[string](),
-		rhymesAssonance:   mapset.NewSet[string](),
-		resultsClose:      mapset.NewSet[string](),
-		resultsMedium:     mapset.NewSet[string](),
-		resultsFar:        mapset.NewSet[string](),
+		rhymesIdentity:    orderedset.NewSet[string](),
+		rhymesPerfect:     orderedset.NewSet[string](),
+		rhymesFamily:      orderedset.NewSet[string](),
+		rhymesAdditive:    orderedset.NewSet[string](),
+		rhymesSubtractive: orderedset.NewSet[string](),
+		rhymesAssonance:   orderedset.NewSet[string](),
+		resultsClose:      orderedset.NewSet[string](),
+		resultsMedium:     orderedset.NewSet[string](),
+		resultsFar:        orderedset.NewSet[string](),
 	}
 }
 

@@ -12,6 +12,8 @@ type accentChars struct {
 	None      string
 }
 
+// TODO: eliminate the return of errors, if we are ever passing something that is not a right phonemen here we should panic
+
 // type IPhoneticAlphabet interface {
 // 	GetPhonemeFamily(phoneme string) (string, error)
 // 	GetFamilyPhonemes(family string) []string

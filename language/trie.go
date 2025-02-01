@@ -1,9 +1,9 @@
 package language
 
 import (
+	"algorhytm/orderedset"
 	"algorhytm/phonetics"
-
-	mapset "github.com/deckarep/golang-set/v2"
+	"strings"
 )
 
 type trie struct {
@@ -13,19 +13,19 @@ type trie struct {
 type TrieNode struct {
 	Children       map[string]*TrieNode
 	IsEndOfWord    bool
-	WordReferences mapset.Set[string]
+	WordReferences orderedset.Set[string]
 }
 
 func (t *trie) GetRoot() *TrieNode {
 	return t.root
 }
 
-func (t *trie) Search(sequence []string) mapset.Set[string] {
+func (t *trie) Search(sequence []string) orderedset.Set[string] {
 	node := t.root
 	for _, phoneme := range sequence {
 		_, ok := node.Children[phoneme]
 		if !ok {
-			return mapset.NewSet[string]()
+			return orderedset.NewSet[string]()
 		}
 		node = node.Children[phoneme]
 	}
@@ -39,7 +39,7 @@ func (t *trie) insert(sequence []string, wordReference string) {
 		if !ok {
 			node.Children[phoneme] = &TrieNode{
 				Children:       make(map[string]*TrieNode),
-				WordReferences: mapset.NewSet[string](),
+				WordReferences: orderedset.NewSet[string](),
 			}
 		}
 		node = node.Children[phoneme]
@@ -57,13 +57,17 @@ func buildTrie(
 		t = &trie{
 			root: &TrieNode{
 				Children:       make(map[string]*TrieNode),
-				WordReferences: mapset.NewSet[string](),
+				WordReferences: orderedset.NewSet[string](),
 			},
 		}
 
 	}
 
 	for word, pronunciations := range *phonemeDictionary {
+		if strings.Contains(word, "'") || strings.Contains(word, "-") || strings.ContainsAny(word, "_'-") {
+			continue
+		}
+
 		for _, pronunciation := range pronunciations {
 
 			stress_idx := alphabet.FindStress(pronunciation)

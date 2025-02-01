@@ -2,18 +2,17 @@ package rhymes
 
 import (
 	"algorhytm/language"
+	"algorhytm/orderedset"
 	"strings"
 	"unsafe"
-
-	mapset "github.com/deckarep/golang-set/v2"
 )
 
-func FindAssonance(lang *language.Language, phonemeSequence []string) mapset.Set[string] {
-	cache := mapset.NewSet[StateKey]()
+func FindAssonance(lang *language.Language, phonemeSequence []string) orderedset.Set[string] {
+	cache := orderedset.NewSet[StateKey]()
 
 	stack := []taggedChain{{lang.Trie.GetRoot(), phonemeSequence, 0}}
 
-	words := mapset.NewSet[string]()
+	words := orderedset.NewSet[string]()
 
 	for len(stack) > 0 {
 		current := stack[len(stack)-1]
@@ -40,7 +39,7 @@ func FindAssonance(lang *language.Language, phonemeSequence []string) mapset.Set
 		// If the sequence is empty, add word references to the result.
 		if len(currentSequence) == 0 {
 			if currentNode.IsEndOfWord {
-				words.Append(currentNode.WordReferences.ToSlice()...)
+				words.Add(currentNode.WordReferences.ToSlice()...)
 			}
 			continue
 		}
