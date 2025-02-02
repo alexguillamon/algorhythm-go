@@ -10,6 +10,13 @@ import (
 
 func GetProperties() (*language.LanguageProperties, error) {
 
+	wd, err := os.Getwd()
+	if err != nil {
+		fmt.Println("Error getting working directory:", err)
+	} else {
+		fmt.Println("Working directory:", wd)
+	}
+
 	flatFile, err := os.Open("language/english/isle_cleaned_flat.json")
 	if err != nil {
 		return nil, fmt.Errorf("%s was not able to open file", err)
