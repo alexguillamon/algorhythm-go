@@ -9,7 +9,7 @@ WORKDIR /src
 # Leverage a cache mount to /go/pkg/mod/ to speed up subsequent builds.
 # Leverage bind mounts to go.sum and go.mod to avoid having to copy them into
 # the container.
-RUN --mount=type=cache,id=s/${RAILWAY_SERVICE_ID}/root/.cache/go-build,target=/root/.cache/go-build \
+RUN --mount=type=cache,id=/${RAILWAY_SERVICE_ID}/root/.cache/go-build,target=/root/.cache/go-build \
     --mount=type=bind,source=go.sum,target=go.sum \
     --mount=type=bind,source=go.mod,target=go.mod \
     go mod download -x
@@ -42,7 +42,7 @@ FROM alpine:latest AS final
 LABEL org.opencontainers.image.source=https://github.com/rhymbic/algorhythm-go
 # Install any runtime dependencies that are needed to run your application.
 # Leverage a cache mount to /var/cache/apk/ to speed up subsequent builds.
-RUN --mount=type=cache,id=s/${RAILWAY_SERVICE_ID}/var/cache/apk,target=/var/cache/apk \
+RUN --mount=type=cache,id=/${RAILWAY_SERVICE_ID}/var/cache/apk,target=/var/cache/apk \
     apk --update add \
     ca-certificates \
     tzdata \
