@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/gorilla/schema"
 	"github.com/rs/cors"
@@ -54,7 +55,7 @@ func handleDictionaryRhymes(lang *language.Language) http.Handler {
 		}
 		rhymeService := rhymes.NewRhymeService(lang)
 
-		err := encode(w, r, http.StatusOK, rhymeService.RhymesFind(query.Word))
+		err := encode(w, r, http.StatusOK, rhymeService.RhymesFind(strings.ToLower(query.Word)))
 		if err != nil {
 			_ = encode(w, r, http.StatusInternalServerError, err)
 		}
