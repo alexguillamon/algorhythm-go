@@ -1,5 +1,6 @@
 # Create a stage for building the application.
 ARG GO_VERSION=1.22.5
+ARG RAILWAY_SERVICE_ID=algorhytm-go
 FROM --platform=$BUILDPLATFORM golang:${GO_VERSION} AS build
 LABEL org.opencontainers.image.source=https://github.com/rhymbic/algorhythm-go
 WORKDIR /src
@@ -41,7 +42,7 @@ FROM alpine:latest AS final
 LABEL org.opencontainers.image.source=https://github.com/rhymbic/algorhythm-go
 # Install any runtime dependencies that are needed to run your application.
 # Leverage a cache mount to /var/cache/apk/ to speed up subsequent builds.
-RUN --mount=type=cache,target=/var/cache/apk \
+RUN --mount=type=cache,id=${RAILWAY_SERVICE_ID}/root/cache/apk,target=/var/cache/apk \
     apk --update add \
     ca-certificates \
     tzdata \
