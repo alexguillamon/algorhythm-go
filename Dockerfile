@@ -68,8 +68,5 @@ WORKDIR /app
 COPY --from=build /bin/server /app/
 COPY ./language/files ./language/files
 
-# Expose the port that the application listens on.
-EXPOSE 8080
-
 # What the container should run when it is started.
 ENTRYPOINT [ "/app/server" ]
