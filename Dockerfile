@@ -65,7 +65,7 @@ WORKDIR /app
 
 # Copy the executable from the "build" stage.
 COPY --from=build /bin/server /app/
-COPY ./language ./language
+COPY ./language/files ./language/files
 
 # Expose the port that the application listens on.
 EXPOSE 8080

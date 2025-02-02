@@ -2,7 +2,7 @@ package main
 
 import (
 	"algorhytm/language"
-	english "algorhytm/language/English"
+	english "algorhytm/language/english"
 	"algorhytm/server"
 	"context"
 	"fmt"
@@ -35,7 +35,7 @@ func run(ctx context.Context, getenv func(string) string) error {
 		Port: getenv("APP_PORT"), // e.g., "8080"
 	}
 	if config.Host == "" {
-		config.Host = "127.0.0.1"
+		config.Host = "0.0.0.0"
 	}
 	if config.Port == "" {
 		config.Port = "8080"
