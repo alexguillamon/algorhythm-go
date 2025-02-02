@@ -42,7 +42,7 @@ FROM alpine:latest AS final
 LABEL org.opencontainers.image.source=https://github.com/rhymbic/algorhythm-go
 # Install any runtime dependencies that are needed to run your application.
 # Leverage a cache mount to /var/cache/apk/ to speed up subsequent builds.
-RUN --mount=type=cache,id=${RAILWAY_SERVICE_ID}/root/cache/apk,target=/var/cache/apk \
+RUN --mount=type=cache,id=s/${RAILWAY_SERVICE_ID}/var/cache/apk,target=/var/cache/apk \
     apk --update add \
     ca-certificates \
     tzdata \
