@@ -1,4 +1,3 @@
-# Create a stage for building the application.
 ARG GO_VERSION=1.22.5
 ARG RAILWAY_SERVICE_ID=algorhytm-go
 FROM --platform=$BUILDPLATFORM golang:${GO_VERSION} AS build
@@ -8,9 +7,9 @@ WORKDIR /src
 COPY go.mod go.sum ./
 RUN go mod download -x
 
-ARG TARGETARCH
+COPY . .
 
-# Build the application.
+ARG TARGETARCH
 RUN CGO_ENABLED=0 GOARCH=$TARGETARCH go build -o /bin/server .
 
 FROM alpine:latest AS final
