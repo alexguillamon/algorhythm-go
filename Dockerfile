@@ -5,6 +5,7 @@ FROM --platform=$BUILDPLATFORM golang:${GO_VERSION} AS build
 LABEL org.opencontainers.image.source=https://github.com/rhymbic/algorhythm-go
 WORKDIR /src
 
+COPY go.mod go.sum ./
 RUN go mod download -x
 
 ARG TARGETARCH
